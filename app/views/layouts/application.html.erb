@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Carinfo</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+
+    <%= render 'layouts/nav.html.erb' %>
+    <div class="container">
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      <div class="row">
+        <div class="col-4">
+          <%= render 'layouts/list-nav.html.erb' %>
+        </div>
+        <div class="col-8">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+
+
+
+
+
+       
