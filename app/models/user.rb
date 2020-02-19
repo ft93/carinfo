@@ -10,6 +10,6 @@ class User < ApplicationRecord
 
 
   def set_default_role
-    self.role ||= :admin
+    self.role ||= :claim_officer
   end
 end
