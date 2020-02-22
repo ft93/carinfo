@@ -35,7 +35,7 @@
 
   <div class="field">
     <%= f.label :role %><br />
-    <%= f.select :role, User.roles %>
+    <%= f.select :role, options_for_select(User.roles.map { |key, value| [key.humanize, key] }), {prompt: "Select Type of Property..."} %>
   </div>
 
 
