@@ -22,13 +22,13 @@ class UsersController < ApplicationController
               format.html { render :new }
             end
         end
+
     end
 
     def destroy
         @user.destroy
-	    respond_to do |format|
-	      format.html { redirect_to users_path, notice: 'User was successfully destroyed.' }
-	    end
+        flash[:danger] = "User was successdully destroyed"
+	    redirect_to users_path
     end
 
     private

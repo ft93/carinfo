@@ -12,9 +12,8 @@
   <body>
 
     <%= render 'layouts/nav.html.erb' %>
-    <div class="container">
-      <p class="notice"><%= notice %></p>
-      <p class="alert"><%= alert %></p>
+    <div class="container main">
+      <%= render 'layouts/message.html.erb' %>
       <div class="row">
         <div class="col-4">
           <%= render 'layouts/list-nav.html.erb' %>
