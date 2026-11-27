@@ -114,6 +114,12 @@ Dokumen desain terkini: [BREAKDOWN.md](BREAKDOWN.md).
 - ✔ Bengkel owner menjadi pengguna pertama (pilot), lalu 3–5 bengkel di Medan.
 - Rekomendasi Claude: validasi pasar dengan wawancara 5–10 bengkel di Medan sebelum menentukan harga; siapkan badan usaha, nama produk/merek, dan syarat layanan sebelum mulai menagih.
 
+### 15. Teknologi, berbagi prototype, dokumentasi lengkap
+- **Owner:** Apakah prototype bisa di-share? → Bisa lewat https://ft93.github.io/carinfo/prototype/ (publik, tanpa login). Catatan: repo `ft93/carinfo` publik, sehingga kode dan dokumen strategi ikut terlihat; disarankan repo dijadikan privat + hosting pindah (Cloudflare Pages/Netlify) sebelum dibagikan luas. ? Belum diputuskan.
+- **Owner:** Minta dokumentasi lengkap dengan flowchart, sequence diagram, dan use case.
+- ✔ Dibuat dokumen **"Dokumentasi Sistem Manajemen Bengkel Body & Cat"** (Claude Docs: https://claude.ai/artifact/CxjhH6CjH7j2ZyrWgh9QuZ) berisi: ringkasan, posisi terhadap Merimen, aktor & role, 18 use case (diagram + tabel), flowchart alur kerja, 3 sequence diagram, state diagram status SPK, ERD + daftar tabel, akuntansi, dokumen & 12 aturan bisnis, non-fungsional & SaaS, roadmap, pertanyaan terbuka & glosarium.
+- ✔ Salinan di repo: [DOKUMENTASI.md](DOKUMENTASI.md) (diagram Mermaid).
+
 ---
 
 ## Langkah berikutnya

@@ -3,6 +3,7 @@
 PWA untuk tracking inventory sparepart bengkel: **Beli → Pakai (pekerjaan & mobil) → Valuasi stok**.
 
 Dokumen:
+- Dokumentasi lengkap (use case, flowchart, sequence, ERD): [docs/DOKUMENTASI.md](docs/DOKUMENTASI.md)
 - Desain & keputusan: [docs/BREAKDOWN.md](docs/BREAKDOWN.md)
 - Catatan diskusi: [docs/DISKUSI.md](docs/DISKUSI.md)
 - Prototype alur bengkel asuransi: https://ft93.github.io/carinfo/prototype/
