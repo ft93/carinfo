@@ -172,6 +172,10 @@ Laporan: laba rugi, neraca, arus kas, buku besar, laba per SPK / per asuransi, u
 13. Konfirmasi tarif/perlakuan PPN, PPh 23, dan PPN atas OR dengan konsultan pajak.
 14. Ada akuntan yang akan membaca laporannya? Format yang diinginkan?
 
+**Model bisnis**
+15. Apakah aplikasi akan dijual ke bengkel lain? (jika ya: multi-tenant wajib sejak Tahap A; usulan model: langganan bulanan bertingkat per jumlah SPK + user — lihat DISKUSI §13)
+16. Target pembeli: bengkel body & cat rekanan asuransi saja, atau bengkel umum juga?
+
 ## 10. Teknologi
 
 - Saat ini: React + TypeScript + Vite, PWA (install di Android/iOS), data lokal IndexedDB, deploy otomatis GitHub Pages.

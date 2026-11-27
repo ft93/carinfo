@@ -90,6 +90,23 @@ Dokumen desain terkini: [BREAKDOWN.md](BREAKDOWN.md).
 **Owner:** "Ya buatkan saja dulu, semua percakapan tolong disimpan."
 - ✔ `docs/BREAKDOWN.md` diperbarui dengan semua keputusan, catatan ini dibuat (`docs/DISKUSI.md`), prototype disimpan ke repo.
 
+### 12. Teknologi yang dipakai
+**Owner:** Aplikasi ini dibuat pakai apa?
+- React + TypeScript (tampilan & logika), Vite (build), PWA (install & offline), IndexedDB/Dexie (data di perangkat), Vitest (test), GitHub Pages + GitHub Actions (hosting & deploy otomatis). Prototype: HTML/CSS/JS biasa.
+- Tahap A perlu server + database online (login, role, sinkron antar HP), misalnya Supabase (PostgreSQL + login) atau server sendiri — diputuskan saat Tahap A.
+
+### 13. Model bisnis (aplikasi berbayar)
+**Owner:** Kalau mau dibuat berbayar, per mobil (case) atau langganan bulanan?
+
+**Claude (rekomendasi, belum diputuskan):**
+- **Langganan bulanan bertingkat** berdasarkan jumlah SPK/bulan + jumlah user (contoh paket: Starter, Pro, Bisnis); kelebihan kuota dikenakan biaya per SPK; diskon tahunan; biaya setup/onboarding; trial gratis 14–30 hari.
+- Murni per mobil kurang disarankan: tagihan naik-turun, sulit dianggarkan, dan memancing bengkel tidak mencatat semua mobil.
+- Harga belum ditentukan — validasi dulu ke 3–5 bengkel.
+- Dampak teknis jika dijual: **multi-tenant** sejak Tahap A (data tiap bengkel terpisah), pengaturan per bengkel (asuransi, harga, pajak, logo), penagihan langganan via payment gateway (mis. Midtrans/Xendit), perlindungan data (UU PDP), PPN atas penjualan langganan (konfirmasi konsultan pajak).
+- Urutan: bengkel owner jadi pengguna pertama → desain multi-tenant sejak Tahap A → pilot 3–5 bengkel → tentukan harga → buka penjualan.
+- ? Apakah benar akan dijual ke bengkel lain (multi-tenant jadi syarat Tahap A)?
+- ? Target pembeli: hanya bengkel body & cat rekanan asuransi, atau bengkel umum juga?
+
 ---
 
 ## Langkah berikutnya
