@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0;font-size:14px}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Prototype Bengkel Body &amp; Cat</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: app shell (phone-width column) + side rail explaining the workflow & auto-journal. Stacks on phones. */
+:root {
+  --bg: #eef1f3; --surface: #ffffff; --sunk: #f5f7f8; --line: #dde3e7;
+  --fg: #17212b; --muted: #5d6b78;
+  --accent: #0f5c73; --accent-soft: #dcecf1; --accent-fg: #ffffff;
+  --amber: #b86a00; --amber-soft: #fbefd9;
+  --ok: #1d7a46; --ok-soft: #dcf1e4; --bad: #b3261e; --bad-soft: #fbe2df;
+  --plate-bg: #111417; --plate-fg: #f4f4f4;
+  --f-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1418; --surface: #172026; --sunk: #1d272e; --line: #2a363f;
+  --fg: #e5ebef; --muted: #93a2ae;
+  --accent: #5fb4cc; --accent-soft: #173640; --accent-fg: #06222b;
+  --amber: #f0a840; --amber-soft: #3a2a10;
+  --ok: #5cc98b; --ok-soft: #143524; --bad: #ff8a80; --bad-soft: #3d1a17;
+  --plate-bg: #050607; --plate-fg: #f4f4f4; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1418; --surface: #172026; --sunk: #1d272e; --line: #2a363f;
+  --fg: #e5ebef; --muted: #93a2ae;
+  --accent: #5fb4cc; --accent-soft: #173640; --accent-fg: #06222b;
+  --amber: #f0a840; --amber-soft: #3a2a10;
+  --ok: #5cc98b; --ok-soft: #143524; --bad: #ff8a80; --bad-soft: #3d1a17;
+  --plate-bg: #050607; --plate-fg: #f4f4f4; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--f-mono); }
+.muted { color: var(--muted); }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { max-width: 1120px; margin: 0 auto; display: grid; gap: 20px; grid-template-columns: minmax(0, 430px) minmax(0, 1fr); align-items: start; }
+@media (max-width: 860px) { .page { grid-template-columns: minmax(0, 1fr); } }
+.intro { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: end; justify-content: space-between; }
+.intro h1 { font-size: 24px; }
+.intro p { margin: 4px 0 0; color: var(--muted); max-width: 62ch; }
+.tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--amber); background: var(--amber-soft); padding: 3px 8px; border-radius: 4px; }
+
+/* App shell */
+.app { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; min-height: 720px; box-shadow: 0 10px 30px -18px rgba(10,30,40,.35); }
+.bar { background: var(--accent); color: var(--accent-fg); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.bar h2 { font-size: 16px; flex: 1; min-width: 0; }
+.bar button { background: none; border: 0; color: inherit; font-size: 20px; line-height: 1; padding: 0 4px; }
+.screen { flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; max-height: 740px; }
+.nav { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--surface); }
+.nav button { background: none; border: 0; padding: 10px 0 12px; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.nav button svg { width: 20px; height: 20px; }
+.nav button[aria-current="page"] { color: var(--accent); font-weight: 600; }
+
+.block { background: var(--sunk); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.block h3 { font-size: 14px; }
+.row { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.row > :first-child { min-width: 0; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; text-align: right; }
+.hr { border-top: 1px dashed var(--line); }
+
+.plate { font-family: var(--f-mono); font-weight: 600; background: var(--plate-bg); color: var(--plate-fg); padding: 2px 7px; border-radius: 4px; border: 1.5px solid #8b949b; letter-spacing: .04em; font-size: 13px; white-space: nowrap; }
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; background: var(--accent-soft); color: var(--accent); }
+.chip.amber { background: var(--amber-soft); color: var(--amber); }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.bad { background: var(--bad-soft); color: var(--bad); }
+.chip.plain { background: var(--surface); color: var(--muted); border: 1px solid var(--line); }
+
+.btn { border: 0; border-radius: 10px; padding: 12px; background: var(--accent); color: var(--accent-fg); font-weight: 600; width: 100%; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.btn.small { width: auto; padding: 7px 12px; font-size: 13px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btns { display: flex; flex-direction: column; gap: 8px; }
+
+.spk { text-align: left; width: 100%; background: var(--sunk); border: 1px solid transparent; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 6px; color: inherit; }
+.spk.demo { border-color: var(--accent); background: var(--accent-soft); }
+.spk .meta { font-size: 12px; color: var(--muted); }
+
+.steps { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
+.steps button { flex: 0 0 auto; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 10px; font-size: 12px; color: var(--muted); }
+.steps button.done { color: var(--ok); border-color: var(--ok); }
+.steps button.cur { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+.steps button:disabled { opacity: .5; cursor: not-allowed; }
+
+.items { display: flex; flex-direction: column; }
+.item { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13px; }
+.item:first-child { border-top: 0; }
+.item .l { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.item .r { text-align: right; white-space: nowrap; display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
+s { color: var(--muted); }
+.check { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); width: 100%; text-align: left; color: inherit; }
+.check .box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--line); display: grid; place-items: center; flex: 0 0 auto; font-size: 13px; color: var(--accent-fg); }
+.check.on .box { background: var(--ok); border-color: var(--ok); }
+.check.on { color: var(--muted); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.note { font-size: 12px; color: var(--muted); }
+.callout { font-size: 12.5px; background: var(--amber-soft); color: var(--fg); border-radius: 10px; padding: 9px 11px; }
+.callout b { color: var(--amber); }
+.big { font-family: var(--f-display); font-size: 22px; font-weight: 700; }
+
+/* Side rail */
+.rail { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.panel h2 { font-size: 16px; }
+.flow { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.flow li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 8px 0; position: relative; }
+.flow li::before { content: ""; position: absolute; left: 13px; top: 34px; bottom: -6px; border-left: 2px solid var(--line); }
+.flow li:last-child::before { display: none; }
+.flow .dot { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-weight: 700; font-size: 13px; background: var(--sunk); color: var(--muted); border: 2px solid var(--line); position: relative; z-index: 1; }
+.flow li.done .dot { background: var(--ok-soft); color: var(--ok); border-color: var(--ok); }
+.flow li.cur .dot { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.flow b { display: block; font-size: 14px; }
+.flow span { font-size: 12.5px; color: var(--muted); }
+
+.jr { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.jr header { display: flex; justify-content: space-between; gap: 10px; padding: 8px 10px; background: var(--sunk); font-size: 12.5px; font-weight: 600; }
+.jr header .muted { font-weight: 400; white-space: nowrap; }
+.jr table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.jr td { padding: 5px 10px; border-top: 1px solid var(--line); }
+.jr td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; width: 1%; }
+.jr td.cr { padding-left: 26px; color: var(--muted); }
+.jr.fresh { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.jlist { display: flex; flex-direction: column; gap: 10px; }
+.scroll { overflow-x: auto; }
+table.fin { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.fin td { padding: 6px 0; border-top: 1px solid var(--line); }
+table.fin td:last-child { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.fin tr.tot td { font-weight: 700; border-top: 2px solid var(--fg); }
+table.fin tr.sub td { color: var(--muted); padding-left: 12px; }
+.empty { font-size: 13px; color: var(--muted); padding: 10px; text-align: center; border: 1px dashed var(--line); border-radius: 10px; }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 13px; max-width: calc(100% - 32px); z-index: 20; }
+@media (prefers-reduced-motion: no-preference) { .jr.fresh { transition: box-shadow .6s; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="intro">
+    <div>
+      <span class="tag">Prototype · data contoh</span>
+      <h1 style="margin-top:6px">Alur bengkel body &amp; cat rekanan asuransi</h1>
+      <p>Buka SPK yang ditandai “Coba alur ini”, lalu tekan tombol di tiap tahap. Panel kanan menunjukkan posisi di alur dan jurnal akuntansi yang terbentuk otomatis.</p>
+    </div>
+    <button class="btn ghost small" id="reset">Ulangi demo</button>
+  </div>
+
+  <section class="app" aria-label="Aplikasi">
+    <div class="bar"><button id="back" aria-label="Kembali" hidden>‹</button><h2 id="title">SPK</h2></div>
+    <div class="screen" id="screen"></div>
+    <nav class="nav" id="nav"></nav>
+  </section>
+
+  <aside class="rail">
+    <div class="panel">
+      <h2>Posisi di alur kerja</h2>
+      <ol class="flow" id="flow"></ol>
+      <p class="note">Mobil umum (non-asuransi) memakai alur yang sama, tapi tahap 3 diganti persetujuan customer dan tagihan langsung ke customer.</p>
+    </div>
+    <div class="panel">
+      <div class="row"><h2>Jurnal otomatis</h2><span class="chip plain" id="jcount"></span></div>
+      <p class="note">Admin tidak menginput jurnal. Setiap tombol di aplikasi membuat jurnal ini sendiri.</p>
+      <div class="jlist" id="jside"></div>
+    </div>
+  </aside>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const rp = n => (n < 0 ? '−' : '') + 'Rp ' + Math.round(Math.abs(n)).toLocaleString('id-ID');
+const PPN = 0.11, PPH23 = 0.02;
+const SUP = {
+  A: { name: 'PT Sumber Part Resmi', pkp: true, term: 'Tempo 30 hari' },
+  B: { name: 'Toko Jaya Motor', pkp: false, term: 'Tunai' },
+};
+const ITEMS = [
+  { id: 1, panel: 'Bumper depan', job: 'Ketok/Las', kind: 'jasa', est: 650000, app: 650000 },
+  { id: 2, panel: 'Bumper depan', job: 'Cat', kind: 'jasa', est: 850000, app: 850000 },
+  { id: 3, panel: 'Fender kanan depan', job: 'Cat', kind: 'jasa', est: 750000, app: 750000 },
+  { id: 4, panel: 'Kap mesin', job: 'Ketok/Las', kind: 'jasa', est: 400000, app: 0, note: 'Ditolak surveyor' },
+  { id: 5, panel: 'Kap mesin', job: 'Cat', kind: 'jasa', est: 900000, app: 900000 },
+  { id: 6, panel: 'Lampu depan kanan', job: 'Ganti part', kind: 'part', est: 2450000, app: 2450000, cost: 2050000, sup: 'A' },
+  { id: 7, panel: 'Grill depan', job: 'Ganti part', kind: 'part', est: 1150000, app: 1050000, note: 'Harga dikoreksi', cost: 860000, sup: 'A' },
+  { id: 8, panel: 'Bracket bumper', job: 'Ganti part', kind: 'part', est: 185000, app: 185000, cost: 140000, sup: 'B' },
+];
+const EXTRA = { id: 9, panel: 'Support radiator', job: 'Ketok/Las', kind: 'jasa', est: 500000, app: 500000, extra: true };
+const OR = 300000;
+const STAGES = ['Bongkar', 'Ketok/Las', 'Dempul', 'Cat', 'Poles', 'Pasang', 'QC'];
+const BAHAN0 = [
+  { name: 'Cat + clear', unit: 'L', qty: 12.5, avg: 420000, use: 0.8 },
+  { name: 'Thinner', unit: 'L', qty: 30, avg: 45000, use: 1.5 },
+  { name: 'Dempul', unit: 'kg', qty: 8, avg: 90000, use: 0.5 },
+  { name: 'Amplas', unit: 'lbr', qty: 200, avg: 4000, use: 12 },
+];
+const UPAH = [{ name: 'Tukang body (borongan)', amt: 450000 }, { name: 'Tukang cat (borongan)', amt: 650000 }];
+const FLOW = [
+  ['Penerimaan mobil', 'Data mobil, asuransi, dokumen, foto'],
+  ['Estimasi', 'Pekerjaan per panel: ketok/las, cat, ganti part'],
+  ['Persetujuan asuransi', 'Survei, koreksi harga, SPK asuransi, Own Risk'],
+  ['Belanja part', 'PO per supplier, barang diterima ke SPK'],
+  ['Pengerjaan', 'Tahapan kerja, bahan, upah, klaim tambahan'],
+  ['Selesai & tagih', 'Invoice asuransi + OR customer, PPN'],
+  ['Pembayaran', 'Asuransi bayar (potong PPh 23), bayar supplier'],
+];
+const OTHERS = [
+  { plate: 'B 2231 TOR', car: 'Honda HR-V 2022', ins: 'Asuransi Mitra Jaya', chip: ['Dikerjakan · Cat', ''] },
+  { plate: 'B 7710 PQN', car: 'Suzuki Ertiga 2020', ins: 'Asuransi Sentosa', chip: ['Menunggu part (inden)', 'amber'] },
+  { plate: 'B 1045 SAK', car: 'Daihatsu Xenia 2019', ins: 'Umum (bayar sendiri)', chip: ['Menunggu setuju customer', 'amber'] },
+  { plate: 'B 1900 WEL', car: 'Mitsubishi Xpander 2023', ins: 'Asuransi Mitra Jaya', chip: ['Ditagih · 47 hari', 'bad'] },
+];
+
+let S;
+function fresh() {
+  S = {
+    tab: 'spk', view: 'list', step: 0, maxStep: 0,
+    po: { A: 'draft', B: 'draft' }, stages: [], bahan: false, upah: false,
+    extra: false, extraOk: false, invoiced: false, orPaid: false, insPaid: false, supPaid: false, upahPaid: false,
+    stock: BAHAN0.map(b => ({ ...b })), journals: [], lastJ: -1,
+  };
+  post('01 Nov', 'Saldo awal', [['Kas/Bank', 50000000, 0], ['Persediaan Bahan', 8120000, 0], ['Modal', 0, 58120000]]);
+  S.lastJ = -1;
+}
+function post(date, desc, lines) { S.journals.push({ date, desc, lines }); S.lastJ = S.journals.length - 1; }
+
+const approved = () => ITEMS.concat(S.extraOk ? [EXTRA] : []).filter(i => i.app > 0);
+function totals() {
+  const a = approved();
+  const jasa = a.filter(i => i.kind === 'jasa').reduce((s, i) => s + i.app, 0);
+  const part = a.filter(i => i.kind === 'part').reduce((s, i) => s + i.app, 0);
+  const T = jasa + part, ins = T - OR;
+  return { jasa, part, T, ins, ppnIns: ins * PPN, ppnOr: OR * PPN, pph: (jasa - OR) * PPH23 };
+}
+const poLines = k => ITEMS.filter(i => i.sup === k && i.app > 0);
+const poDpp = k => poLines(k).reduce((s, i) => s + i.cost, 0);
+const poPpn = k => SUP[k].pkp ? poDpp(k) * PPN : 0;
+const bahanCost = () => BAHAN0.reduce((s, b) => s + b.use * b.avg, 0);
+const upahCost = () => UPAH.reduce((s, u) => s + u.amt, 0);
+function balances() {
+  const m = new Map();
+  for (const j of S.journals) for (const [a, d, c] of j.lines) m.set(a, (m.get(a) || 0) + d - c);
+  return m;
+}
+const wip = () => balances().get('Pekerjaan Dalam Proses') || 0;
+
+function demoStatus() {
+  if (S.insPaid) return ['Lunas', 'ok'];
+  if (S.invoiced) return ['Ditagih ke asuransi', 'amber'];
+  return [['Penerimaan', 'Estimasi', 'Menunggu survei', 'Belanja part', 'Dikerjakan', 'Siap ditagih', 'Pembayaran'][S.step], ''];
+}
+
+// ---------- rendering ----------
+const $ = id => document.getElementById(id);
+const ICONS = {
+  spk: '<path d="M7 3h7l5 5v13H7z M14 3v5h5 M10 13h6 M10 17h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  beli: '<path d="M4 5h2l2 11h10l2-8H7 M10 20a1 1 0 1 0 0 .01 M17 20a1 1 0 1 0 0 .01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+  stok: '<path d="M4 8l8-4 8 4v9l-8 4-8-4z M4 8l8 4 8-4 M12 12v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  uang: '<path d="M4 19V9 M10 19V5 M16 19v-7 M21 19H3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+};
+function render() {
+  const tabs = [['spk', 'SPK'], ['beli', 'Belanja'], ['stok', 'Stok'], ['uang', 'Keuangan']];
+  $('nav').innerHTML = tabs.map(([k, l]) => `<button data-tab="${k}" ${S.tab === k ? 'aria-current="page"' : ''}><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>${l}</button>`).join('');
+  const inDetail = S.tab === 'spk' && S.view === 'detail';
+  $('back').hidden = !inDetail;
+  $('title').textContent = inDetail ? 'SPK-0418' : { spk: 'SPK / Work Order', beli: 'Belanja (PO)', stok: 'Stok bahan', uang: 'Keuangan' }[S.tab];
+  $('screen').innerHTML = S.tab === 'spk' ? (inDetail ? detail() : list()) : S.tab === 'beli' ? beli() : S.tab === 'stok' ? stok() : keuangan();
+  rail();
+}
+
+function list() {
+  const [st, cls] = demoStatus();
+  return `
+  <div class="row"><span class="muted">5 SPK aktif</span><button class="btn small" data-act="toast" data-msg="Form penerimaan mobil baru (sama seperti tahap 1 di SPK demo)">+ Mobil masuk</button></div>
+  <button class="spk demo" data-act="open">
+    <div class="row"><span class="plate">B 1782 KJT</span><span class="chip ${cls}">${st}</span></div>
+    <b>Toyota Innova 2021</b>
+    <div class="meta">Asuransi Sentosa · Klaim CLM-25-88120 · masuk 02 Nov</div>
+    <span class="chip">Coba alur ini →</span>
+  </button>
+  ${OTHERS.map(o => `
+  <button class="spk" data-act="toast" data-msg="SPK contoh. Buka SPK B 1782 KJT untuk mencoba alurnya.">
+    <div class="row"><span class="plate">${o.plate}</span><span class="chip ${o.chip[1]}">${o.chip[0]}</span></div>
+    <b>${o.car}</b><div class="meta">${o.ins}</div>
+  </button>`).join('')}`;
+}
+
+function stepNav() {
+  const names = ['Terima', 'Estimasi', 'Setuju', 'Belanja', 'Kerja', 'Tagih', 'Bayar'];
+  return `<div class="steps" role="tablist">${names.map((n, i) =>
+    `<button data-act="goto" data-i="${i}" class="${i === S.step ? 'cur' : i < S.maxStep ? 'done' : ''}" ${i > S.maxStep ? 'disabled' : ''}>${i + 1}. ${n}</button>`).join('')}</div>`;
+}
+function head() {
+  return `<div class="row"><span class="plate">B 1782 KJT</span><span class="chip">${demoStatus()[0]}</span></div>${stepNav()}`;
+}
+const next = (label, ok = true) => `<button class="btn" data-act="next" ${ok ? '' : 'disabled'}>${label}</button>`;
+
+function detail() {
+  const t = totals();
+  const v = [
+    () => `
+      <div class="block"><h3>Kendaraan &amp; pemilik</h3>
+        <dl class="kv"><dt>Mobil</dt><dd>Toyota Innova 2.4 G 2021</dd><dt>Warna</dt><dd>Silver metalik</dd><dt>Pemilik</dt><dd>Contoh: Bpk. Hendra</dd><dt>No. HP</dt><dd class="mono">0812-xxxx-0451</dd></dl></div>
+      <div class="block"><h3>Asuransi</h3>
+        <dl class="kv"><dt>Jenis</dt><dd><span class="chip">Asuransi</span></dd><dt>Perusahaan</dt><dd>Asuransi Sentosa</dd><dt>No. polis</dt><dd class="mono">POL-7731-0092</dd><dt>No. klaim</dt><dd class="mono">CLM-25-88120</dd><dt>Own Risk</dt><dd class="num">${rp(OR)}</dd></dl></div>
+      <div class="block"><h3>Dokumen &amp; foto</h3>
+        <div class="grid2">${['STNK', 'SIM', 'Form klaim', 'Laporan kejadian', 'Foto kerusakan (8)', 'Foto odometer'].map(d => `<span class="chip ok">✓ ${d}</span>`).join('')}</div></div>
+      ${next('Simpan &amp; buat estimasi')}`,
+    () => `
+      <div class="block"><h3>Estimasi per panel</h3><div class="items">${ITEMS.map(i => `
+        <div class="item"><div class="l"><b>${i.panel}</b><span><span class="chip ${i.kind === 'part' ? 'amber' : ''}">${i.job}</span></span></div>
+        <div class="r num">${rp(i.est)}</div></div>`).join('')}</div>
+        <div class="hr"></div>
+        <div class="row"><span>Total estimasi</span><b class="num">${rp(ITEMS.reduce((s, i) => s + i.est, 0))}</b></div></div>
+      <p class="note">Harga jasa diambil dari daftar harga per asuransi, bisa diedit per item.</p>
+      ${next('Kirim estimasi ke asuransi')}`,
+    () => `
+      <div class="callout"><b>Hasil survei asuransi.</b> Surveyor menolak 1 item dan mengoreksi 1 harga. Item yang tidak disetujui tidak ikut ditagih dan part-nya tidak dibeli.</div>
+      <div class="block"><h3>Disetujui asuransi</h3><div class="items">${ITEMS.map(i => `
+        <div class="item"><div class="l"><b>${i.panel}</b><span>${i.job}${i.note ? ` · <span class="${i.app ? 'muted' : ''}" style="${i.app ? '' : 'color:var(--bad)'}">${i.note}</span>` : ''}</span></div>
+        <div class="r num">${i.app === i.est ? rp(i.app) : `<s>${rp(i.est)}</s>${i.app ? rp(i.app) : '<span class="chip bad">Ditolak</span>'}`}</div></div>`).join('')}</div>
+        <div class="hr"></div>
+        <dl class="kv num"><dt>Total disetujui</dt><dd><b>${rp(t.T)}</b></dd><dt>Own Risk (customer)</dt><dd>${rp(OR)}</dd><dt>Ditanggung asuransi</dt><dd>${rp(t.ins)}</dd></dl></div>
+      ${next('SPK asuransi diterima, mulai belanja part')}`,
+    () => `
+      <p class="note">Part yang disetujui otomatis dikelompokkan per supplier. Barang yang datang langsung tercatat ke SPK ini.</p>
+      ${['A', 'B'].map(k => `
+      <div class="block">
+        <div class="row"><h3>${SUP[k].name}</h3><span class="chip ${S.po[k] === 'diterima' ? 'ok' : S.po[k] === 'dipesan' ? 'amber' : 'plain'}">${{ draft: 'Draft', dipesan: 'Dipesan', diterima: 'Diterima' }[S.po[k]]}</span></div>
+        <span class="note">${SUP[k].term} · ${SUP[k].pkp ? 'PKP (ada PPN masukan)' : 'Non-PKP'}</span>
+        <div class="items">${poLines(k).map(i => `<div class="item"><span>${i.panel}</span><span class="num">${rp(i.cost)}</span></div>`).join('')}</div>
+        <div class="hr"></div>
+        <dl class="kv num"><dt>DPP</dt><dd>${rp(poDpp(k))}</dd>${SUP[k].pkp ? `<dt>PPN 11%</dt><dd>${rp(poPpn(k))}</dd>` : ''}<dt>Total</dt><dd><b>${rp(poDpp(k) + poPpn(k))}</b></dd></dl>
+        ${S.po[k] === 'draft' ? `<button class="btn small" data-act="po" data-k="${k}">Kirim PO</button>` : S.po[k] === 'dipesan' ? `<button class="btn small" data-act="po" data-k="${k}">Barang diterima</button>` : ''}
+      </div>`).join('')}
+      ${next('Part lengkap, mulai pengerjaan', S.po.A === 'diterima' && S.po.B === 'diterima')}`,
+    () => `
+      <div class="block"><div class="row"><h3>Tahapan pengerjaan</h3><button class="btn small ghost" data-act="allstages">Tandai semua</button></div>
+        ${STAGES.map((s, i) => `<button class="check ${S.stages.includes(i) ? 'on' : ''}" data-act="stage" data-i="${i}"><span class="box">${S.stages.includes(i) ? '✓' : ''}</span>${s}</button>`).join('')}</div>
+      <div class="block"><div class="row"><h3>Bahan dari gudang</h3>${S.bahan ? '<span class="chip ok">Tercatat</span>' : ''}</div>
+        <div class="items">${BAHAN0.map(b => `<div class="item"><span>${b.name} · ${b.use} ${b.unit}</span><span class="num">${rp(b.use * b.avg)}</span></div>`).join('')}</div>
+        ${S.bahan ? '' : '<button class="btn small" data-act="bahan">Catat pemakaian bahan</button>'}</div>
+      <div class="block"><div class="row"><h3>Upah tukang</h3>${S.upah ? '<span class="chip ok">Tercatat</span>' : ''}</div>
+        <div class="items">${UPAH.map(u => `<div class="item"><span>${u.name}</span><span class="num">${rp(u.amt)}</span></div>`).join('')}</div>
+        ${S.upah ? '' : '<button class="btn small" data-act="upah">Catat upah</button>'}</div>
+      <div class="block"><h3>Klaim tambahan</h3>
+        ${!S.extra ? `<p class="note">Kerusakan baru yang ditemukan saat bongkar diajukan lagi ke asuransi tanpa membuat SPK baru.</p><button class="btn small ghost" data-act="extra">Laporkan kerusakan tambahan</button>`
+          : !S.extraOk ? `<div class="item"><span>${EXTRA.panel} · ${EXTRA.job}</span><span class="chip amber">Menunggu asuransi</span></div><button class="btn small" data-act="extraok">Asuransi setujui tambahan</button>`
+          : `<div class="item"><span>${EXTRA.panel} · ${EXTRA.job}</span><span class="num">${rp(EXTRA.app)} <span class="chip ok">Disetujui</span></span></div>`}</div>
+      ${next('Pekerjaan selesai, siap ditagih', S.stages.length === STAGES.length && S.bahan && S.upah && !(S.extra && !S.extraOk))}`,
+    () => `
+      <div class="block"><h3>Rincian tagihan</h3>
+        <dl class="kv num"><dt>Jasa</dt><dd>${rp(t.jasa)}</dd><dt>Part</dt><dd>${rp(t.part)}</dd><dt><b>Total (DPP)</b></dt><dd><b>${rp(t.T)}</b></dd></dl></div>
+      <div class="block"><div class="row"><h3>Invoice ke Asuransi Sentosa</h3>${S.invoiced ? '<span class="chip ok">Terbit</span>' : ''}</div>
+        <dl class="kv num"><dt>DPP (total − OR)</dt><dd>${rp(t.ins)}</dd><dt>PPN 11%</dt><dd>${rp(t.ppnIns)}</dd><dt>Tagihan</dt><dd><b>${rp(t.ins + t.ppnIns)}</b></dd></dl></div>
+      <div class="block"><div class="row"><h3>Own Risk ke customer</h3>${S.orPaid ? '<span class="chip ok">Lunas</span>' : ''}</div>
+        <dl class="kv num"><dt>DPP</dt><dd>${rp(OR)}</dd><dt>PPN 11%</dt><dd>${rp(t.ppnOr)}</dd><dt>Dibayar customer</dt><dd><b>${rp(OR + t.ppnOr)}</b></dd></dl></div>
+      ${!S.invoiced ? `<button class="btn" data-act="invoice">Terbitkan invoice &amp; faktur pajak</button>`
+        : !S.orPaid ? `<button class="btn" data-act="orpaid">Customer bayar OR, serah terima mobil</button>`
+        : next('Lanjut ke pembayaran')}`,
+    () => {
+      const bruto = t.ins + t.ppnIns;
+      const laba = t.T - (S.journals.filter(j => j.desc.startsWith('HPP')).reduce((s, j) => s + j.lines[0][1], 0));
+      return `
+      <div class="block"><div class="row"><h3>Piutang asuransi</h3><span class="chip ${S.insPaid ? 'ok' : 'amber'}">${S.insPaid ? 'Lunas 22 Des' : 'Jatuh tempo 17 Des'}</span></div>
+        <dl class="kv num"><dt>Tagihan</dt><dd>${rp(bruto)}</dd><dt>Dipotong PPh 23 (2% jasa)</dt><dd>${rp(-t.pph)}</dd><dt>Diterima di bank</dt><dd><b>${rp(bruto - t.pph)}</b></dd></dl>
+        ${S.insPaid ? '' : '<button class="btn small" data-act="inspaid">Asuransi bayar</button>'}</div>
+      <div class="block"><div class="row"><h3>Utang ${SUP.A.name}</h3><span class="chip ${S.supPaid ? 'ok' : 'amber'}">${S.supPaid ? 'Lunas' : 'Jatuh tempo 09 Des'}</span></div>
+        <div class="row num"><span>Total</span><b>${rp(poDpp('A') + poPpn('A'))}</b></div>
+        ${S.supPaid ? '' : '<button class="btn small" data-act="suppaid">Bayar supplier</button>'}</div>
+      <div class="block"><div class="row"><h3>Upah tukang</h3><span class="chip ${S.upahPaid ? 'ok' : 'amber'}">${S.upahPaid ? 'Dibayar' : 'Belum dibayar'}</span></div>
+        <div class="row num"><span>Total</span><b>${rp(upahCost())}</b></div>
+        ${S.upahPaid ? '' : '<button class="btn small" data-act="upahpaid">Bayar upah</button>'}</div>
+      <div class="block"><h3>Laba SPK ini</h3>
+        <div class="big num">${rp(laba)}</div><span class="note">Margin ${(laba / t.T * 100).toFixed(1)}% dari pendapatan ${rp(t.T)}. Detail di tab Keuangan.</span></div>`;
+    },
+  ];
+  return head() + v[S.step]();
+}
+
+function beli() {
+  const rows = ['A', 'B'].filter(k => S.po[k] !== 'draft');
+  return `<p class="note">Semua PO lintas SPK. Pembelian bahan stok gudang (cat, thinner) juga dibuat di sini.</p>
+  ${rows.length ? rows.map((k, n) => `<div class="block">
+    <div class="row"><b>PO-11${20 + n} · ${SUP[k].name}</b><span class="chip ${S.po[k] === 'diterima' ? 'ok' : 'amber'}">${S.po[k] === 'diterima' ? 'Diterima' : 'Dipesan'}</span></div>
+    <span class="note">Untuk SPK-0418 · B 1782 KJT · ${SUP[k].term}</span>
+    <div class="row num"><span>${poLines(k).length} item</span><b>${rp(poDpp(k) + poPpn(k))}</b></div></div>`).join('')
+  : '<div class="empty">Belum ada PO. PO dibuat otomatis dari part yang disetujui asuransi (SPK demo, tahap 4).</div>'}`;
+}
+
+function stok() {
+  const tot = S.stock.reduce((s, b) => s + b.qty * b.avg, 0);
+  return `<div class="block"><span class="note">Nilai stok bahan (rata-rata tertimbang)</span><div class="big num">${rp(tot)}</div></div>
+  <div class="block"><div class="items">${S.stock.map(b => `<div class="item"><div class="l"><b>${b.name}</b><span class="note">avg ${rp(b.avg)} / ${b.unit}</span></div><div class="r num"><b>${+b.qty.toFixed(2)} ${b.unit}</b><span class="note">${rp(b.qty * b.avg)}</span></div></div>`).join('')}</div></div>
+  <p class="note">Part khusus mobil (lampu, grill) tidak masuk stok gudang: langsung dibebankan ke SPK-nya.</p>`;
+}
+
+function keuangan() {
+  const b = balances(), g = a => b.get(a) || 0;
+  const pend = -(g('Pendapatan Jasa') + g('Pendapatan Part')), hpp = g('HPP');
+  const hppJ = S.journals.find(j => j.desc.startsWith('HPP'));
+  const acc = ['Kas/Bank', 'Piutang Asuransi', 'Piutang Customer', 'Persediaan Bahan', 'Pekerjaan Dalam Proses', 'PPN Masukan', 'PPh 23 Dibayar Dimuka'];
+  const liab = ['Utang Supplier', 'Utang Upah', 'PPN Keluaran'];
+  const aset = acc.reduce((s, a) => s + g(a), 0), kew = liab.reduce((s, a) => s - g(a), 0);
+  return `
+  <div class="block"><h3>Laba rugi (November)</h3><table class="fin">
+    <tr><td>Pendapatan jasa</td><td>${rp(-g('Pendapatan Jasa'))}</td></tr>
+    <tr><td>Pendapatan part</td><td>${rp(-g('Pendapatan Part'))}</td></tr>
+    <tr><td>Harga pokok (HPP)</td><td>${rp(-hpp)}</td></tr>
+    ${hppJ ? `<tr class="sub"><td>Part ${rp(poDpp('A') + poDpp('B'))} · bahan ${rp(bahanCost())} · upah ${rp(upahCost())}</td><td></td></tr>` : ''}
+    <tr class="tot"><td>Laba kotor</td><td>${rp(pend - hpp)}</td></tr></table>
+    ${pend ? '' : '<span class="note">Pendapatan baru diakui saat invoice terbit (tahap 6). Sebelum itu biaya ditahan di “Pekerjaan Dalam Proses”.</span>'}</div>
+  <div class="block"><h3>Neraca ringkas</h3><table class="fin">
+    ${acc.filter(a => g(a)).map(a => `<tr><td>${a}</td><td>${rp(g(a))}</td></tr>`).join('')}
+    <tr class="tot"><td>Total aset</td><td>${rp(aset)}</td></tr>
+    ${liab.filter(a => g(a)).map(a => `<tr><td>${a}</td><td>${rp(-g(a))}</td></tr>`).join('')}
+    <tr><td>Modal + laba berjalan</td><td>${rp(aset - kew)}</td></tr>
+    <tr class="tot"><td>Total kewajiban + modal</td><td>${rp(aset)}</td></tr></table></div>
+  <div class="block"><h3>Semua jurnal (${S.journals.length})</h3><div class="jlist">${S.journals.map((j, i) => jr(j, i)).reverse().join('')}</div></div>`;
+}
+
+function jr(j, i) {
+  const lines = [...j.lines.filter(l => l[1]), ...j.lines.filter(l => l[2])];
+  return `<div class="jr ${i === S.lastJ ? 'fresh' : ''}"><header><span>${j.desc}</span><span class="muted">${j.date}</span></header>
+  <div class="scroll"><table>${lines.map(([a, d, c]) => `<tr><td class="${c ? 'cr' : ''}">${a}</td><td class="n">${d ? rp(d) : ''}</td><td class="n">${c ? rp(c) : ''}</td></tr>`).join('')}</table></div></div>`;
+}
+
+function rail() {
+  const done = S.insPaid && S.supPaid && S.upahPaid;
+  $('flow').innerHTML = FLOW.map(([b, s], i) => `<li class="${done || i < S.step ? 'done' : i === S.step ? 'cur' : ''}"><span class="dot">${done || i < S.step ? '✓' : i + 1}</span><div><b>${b}</b><span>${s}</span></div></li>`).join('');
+  $('jcount').textContent = S.journals.length + ' jurnal';
+  const recent = S.journals.map((j, i) => [j, i]).slice(-3).reverse();
+  $('jside').innerHTML = (S.journals.length <= 1 ? '<div class="empty">Jurnal muncul saat ada transaksi uang atau barang: mulai di tahap 4 (barang diterima).</div>' : '') + recent.map(([j, i]) => jr(j, i)).join('');
+}
+
+let toastT;
+function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
+
+// ---------- actions ----------
+const A = {
+  open() { S.view = 'detail'; },
+  goto(el) { S.step = +el.dataset.i; },
+  next() { S.step = Math.min(6, S.step + 1); S.maxStep = Math.max(S.maxStep, S.step); },
+  po(el) {
+    const k = el.dataset.k;
+    if (S.po[k] === 'draft') { S.po[k] = 'dipesan'; toast('PO dikirim ke ' + SUP[k].name); return; }
+    S.po[k] = 'diterima';
+    const dpp = poDpp(k), ppn = poPpn(k);
+    post('09 Nov', `Part diterima · ${SUP[k].name}`, [['Pekerjaan Dalam Proses', dpp, 0], ...(ppn ? [['PPN Masukan', ppn, 0]] : []), [SUP[k].pkp ? 'Utang Supplier' : 'Kas/Bank', 0, dpp + ppn]]);
+    toast('Jurnal dibuat: part masuk ke biaya SPK');
+  },
+  stage(el) { const i = +el.dataset.i; S.stages = S.stages.includes(i) ? S.stages.filter(x => x !== i) : [...S.stages, i]; },
+  allstages() { S.stages = STAGES.map((_, i) => i); },
+  bahan() {
+    S.bahan = true; S.stock.forEach((b, i) => b.qty -= BAHAN0[i].use);
+    post('12 Nov', 'Pemakaian bahan · SPK-0418', [['Pekerjaan Dalam Proses', bahanCost(), 0], ['Persediaan Bahan', 0, bahanCost()]]);
+    toast('Stok bahan berkurang, biaya masuk ke SPK');
+  },
+  upah() { S.upah = true; post('16 Nov', 'Upah tukang · SPK-0418', [['Pekerjaan Dalam Proses', upahCost(), 0], ['Utang Upah', 0, upahCost()]]); },
+  extra() { S.extra = true; toast('Klaim tambahan dikirim ke asuransi'); },
+  extraok() { S.extraOk = true; toast('Tambahan disetujui: total tagihan ikut naik'); },
+  invoice() {
+    const t = totals(); S.invoiced = true;
+    post('17 Nov', 'Invoice INV-0418 · Asuransi Sentosa + OR', [
+      ['Piutang Asuransi', t.ins + t.ppnIns, 0], ['Piutang Customer', OR + t.ppnOr, 0],
+      ['Pendapatan Jasa', 0, t.jasa], ['Pendapatan Part', 0, t.part], ['PPN Keluaran', 0, t.ppnIns + t.ppnOr]]);
+    const w = wip();
+    post('17 Nov', 'HPP SPK-0418 (tutup pekerjaan dalam proses)', [['HPP', w, 0], ['Pekerjaan Dalam Proses', 0, w]]);
+    S.lastJ = S.journals.length - 2;
+    toast('2 jurnal dibuat: pendapatan + PPN, dan HPP');
+  },
+  orpaid() { const t = totals(); S.orPaid = true; post('17 Nov', 'Customer bayar Own Risk', [['Kas/Bank', OR + t.ppnOr, 0], ['Piutang Customer', 0, OR + t.ppnOr]]); },
+  inspaid() {
+    const t = totals(), bruto = t.ins + t.ppnIns; S.insPaid = true;
+    post('22 Des', 'Pembayaran Asuransi Sentosa (potong PPh 23)', [['Kas/Bank', bruto - t.pph, 0], ['PPh 23 Dibayar Dimuka', t.pph, 0], ['Piutang Asuransi', 0, bruto]]);
+  },
+  suppaid() { const v = poDpp('A') + poPpn('A'); S.supPaid = true; post('09 Des', 'Bayar ' + SUP.A.name, [['Utang Supplier', v, 0], ['Kas/Bank', 0, v]]); },
+  upahpaid() { S.upahPaid = true; post('30 Nov', 'Bayar upah tukang', [['Utang Upah', upahCost(), 0], ['Kas/Bank', 0, upahCost()]]); },
+  toast(el) { toast(el.dataset.msg); return false; },
+};
+document.addEventListener('click', e => {
+  const tab = e.target.closest('[data-tab]');
+  if (tab) { S.tab = tab.dataset.tab; render(); return; }
+  const el = e.target.closest('[data-act]');
+  if (!el || el.disabled) return;
+  if (A[el.dataset.act](el) !== false) render();
+});
+$('back').onclick = () => { S.view = 'list'; render(); };
+$('reset').onclick = () => { fresh(); render(); toast('Demo diulang dari awal'); };
+fresh(); render();
+</script>
+
+</body>
+</html>
