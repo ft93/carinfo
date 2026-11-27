@@ -17,3 +17,8 @@ npm run build    # hasil di dist/, siap di-deploy ke hosting statis
 2. Buka URL-nya di HP:
    - **Android (Chrome):** menu ⋮ → *Install app / Add to Home screen*
    - **iPhone (Safari):** tombol Share → *Add to Home Screen*
+
+## Deploy otomatis (GitHub Pages)
+Setiap push, GitHub Actions menjalankan test, build, lalu publish ke branch `gh-pages`.
+Sekali saja: **Settings → Pages → Source: Deploy from a branch → `gh-pages` / `(root)`**.
+URL aplikasi: https://ft93.github.io/carinfo/
