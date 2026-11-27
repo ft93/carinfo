@@ -107,6 +107,13 @@ Dokumen desain terkini: [BREAKDOWN.md](BREAKDOWN.md).
 - ? Apakah benar akan dijual ke bengkel lain (multi-tenant jadi syarat Tahap A)?
 - ? Target pembeli: hanya bengkel body & cat rekanan asuransi, atau bengkel umum juga?
 
+### 14. Keputusan: dijadikan bisnis
+**Owner:** "Kalau bisa jadikan business saya pasti mau, karena bengkel rata-rata management di **Medan** masih manual, sama seperti bengkel saya."
+- ✔ Aplikasi diarahkan menjadi **produk SaaS** untuk bengkel; target awal **bengkel di Medan**.
+- ✔ **Multi-tenant wajib sejak Tahap A** (data tiap bengkel terpisah, pengaturan per bengkel).
+- ✔ Bengkel owner menjadi pengguna pertama (pilot), lalu 3–5 bengkel di Medan.
+- Rekomendasi Claude: validasi pasar dengan wawancara 5–10 bengkel di Medan sebelum menentukan harga; siapkan badan usaha, nama produk/merek, dan syarat layanan sebelum mulai menagih.
+
 ---
 
 ## Langkah berikutnya

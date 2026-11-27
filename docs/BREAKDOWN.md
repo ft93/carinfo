@@ -15,6 +15,8 @@
 - Bengkel sudah **PKP** (memungut PPN).
 - Pembukuan saat ini masih di **Excel**.
 
+- ✔ **Arah produk:** dijadikan bisnis SaaS untuk bengkel, target awal **Medan** (banyak bengkel masih manual). Bengkel owner = pengguna pertama. **Multi-tenant sejak Tahap A.**
+
 ## 2. Posisi aplikasi terhadap Merimen
 
 Aplikasi ini **tidak menggantikan Merimen**. Merimen = jalur komunikasi dengan asuransi; aplikasi ini = sistem internal bengkel.
@@ -141,7 +143,7 @@ Laporan: laba rugi, neraca, arus kas, buku besar, laba per SPK / per asuransi, u
 |---|---|
 | ✅ **Fase 1 (selesai)** | PWA inventory sederhana: sparepart, mobil, beli, pakai, valuasi stok, backup. Live di https://ft93.github.io/carinfo/ |
 | ✅ **Prototype alur** | Prototype klik alur asuransi + jurnal otomatis (data contoh) |
-| **A. Inti** | Login & role, data tersinkron di semua HP, penerimaan + tanda terima, SPK per panel, catat approval (Merimen), status SPK, PO per supplier terhubung SPK, pemakaian bahan ke SPK |
+| **A. Inti** | **Multi-tenant (banyak bengkel)**, login & role, data tersinkron di semua HP, penerimaan + tanda terima, SPK per panel, catat approval (Merimen), status SPK, PO per supplier terhubung SPK, pemakaian bahan ke SPK |
 | **B. Keuangan** | Invoice + PPN, piutang asuransi & customer, utang supplier, jurnal otomatis, laba per SPK, laporan keuangan |
 | **C. Operasional** | Upah tukang, progress per tahap, klaim tambahan, upload foto & dokumen, cetak SPK kerja / tanda terima |
 | **D. Laporan & integrasi** | Laporan per asuransi/supplier, lama pengerjaan, import Merimen (jika memungkinkan) |
@@ -173,7 +175,7 @@ Laporan: laba rugi, neraca, arus kas, buku besar, laba per SPK / per asuransi, u
 14. Ada akuntan yang akan membaca laporannya? Format yang diinginkan?
 
 **Model bisnis**
-15. Apakah aplikasi akan dijual ke bengkel lain? (jika ya: multi-tenant wajib sejak Tahap A; usulan model: langganan bulanan bertingkat per jumlah SPK + user — lihat DISKUSI §13)
+15. ✔ Dijual ke bengkel lain (target awal Medan) → multi-tenant sejak Tahap A. Model harga usulan: langganan bulanan bertingkat per jumlah SPK + user (DISKUSI §13); harga ditentukan setelah validasi.
 16. Target pembeli: bengkel body & cat rekanan asuransi saja, atau bengkel umum juga?
 
 ## 10. Teknologi
