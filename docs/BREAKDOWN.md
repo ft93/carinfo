@@ -58,7 +58,7 @@ Kenapa moving average? Paling umum untuk bengkel, mudah dicek manual, dan diteri
 
 ## 6. Roadmap berikutnya
 **Fase 2 – Multi-user & cloud**
-- Login (owner, admin, mekanik) dan sinkronisasi antar HP (mis. Supabase/Firebase atau backend Rails yang ada di repo ini)
+- Login (owner, admin, mekanik) dan sinkronisasi antar HP (mis. Supabase/Firebase)
 - Hak akses: mekanik hanya boleh catat pemakaian
 
 **Fase 3 – Operasional bengkel**

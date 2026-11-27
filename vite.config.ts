@@ -4,7 +4,6 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   base: './',
-  css: { postcss: {} },
   plugins: [
     react(),
     VitePWA({
