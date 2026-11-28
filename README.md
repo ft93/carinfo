@@ -1,5 +1,7 @@
 # Sparepart Bengkel
 
+> **Proyek ini sudah pindah ke repo privat [`ft93/otora`](https://github.com/ft93/otora) dengan nama baru Otora.** Repo ini tidak dikembangkan lagi; aplikasi di sini tetap online sementara supaya data di HP bisa dipindahkan (Laporan → Download backup).
+
 PWA untuk tracking inventory sparepart bengkel: **Beli → Pakai (pekerjaan & mobil) → Valuasi stok**.
 
 Dokumen:
