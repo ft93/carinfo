@@ -125,6 +125,7 @@ Dokumen desain terkini: [BREAKDOWN.md](BREAKDOWN.md).
 - Usulan putaran 2: Montira, Otora, Bengkira, Autonota, Torqa, GarageOS, BodyFlow, Horas Bengkel.
 - **Owner menyukai "Otora".** Penilaian Claude: pendek, terasa otomotif, tidak membatasi ke body & cat, mudah jadi brand; perlu tagline (mis. "Otora — Sistem Bengkel Body & Cat"); catatan kecil: "ōtora" di Jepang adalah slang untuk orang mabuk berat.
 - ? Sebelum dipakai: cek merek DJKI (kelas 9 & 42), domain (otora.id / .co.id / .app), akun media sosial, nama serupa.
+- Hasil cek web oleh Claude (28 Nov 2026): tidak ditemukan aplikasi, perusahaan, atau merek otomotif bernama "Otora"; tidak ada halaman otora.id/.co.id/.app di hasil pencarian. Yang mirip hanya Otapp, OTORide, Otto/OttoApp, Otrofy (bidang lain). **Belum dicek:** database merek DJKI dan WHOIS domain (tidak bisa diakses dari sesi Claude) — owner perlu cek sendiri, lalu segera daftar merek + beli domain bila aman.
 
 ---
 
