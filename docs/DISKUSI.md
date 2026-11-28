@@ -120,6 +120,12 @@ Dokumen desain terkini: [BREAKDOWN.md](BREAKDOWN.md).
 - ✔ Dibuat dokumen **"Dokumentasi Sistem Manajemen Bengkel Body & Cat"** (Claude Docs: https://claude.ai/artifact/CxjhH6CjH7j2ZyrWgh9QuZ) berisi: ringkasan, posisi terhadap Merimen, aktor & role, 18 use case (diagram + tabel), flowchart alur kerja, 3 sequence diagram, state diagram status SPK, ERD + daftar tabel, akuntansi, dokumen & 12 aturan bisnis, non-fungsional & SaaS, roadmap, pertanyaan terbuka & glosarium.
 - ✔ Salinan di repo: [DOKUMENTASI.md](DOKUMENTASI.md) (diagram Mermaid).
 
+### 16. Nama produk
+- Usulan putaran 1 (Spion, Dasbor, Poles, Klaimo, Ketok, dll.) — **owner: kurang bagus.**
+- Usulan putaran 2: Montira, Otora, Bengkira, Autonota, Torqa, GarageOS, BodyFlow, Horas Bengkel.
+- **Owner menyukai "Otora".** Penilaian Claude: pendek, terasa otomotif, tidak membatasi ke body & cat, mudah jadi brand; perlu tagline (mis. "Otora — Sistem Bengkel Body & Cat"); catatan kecil: "ōtora" di Jepang adalah slang untuk orang mabuk berat.
+- ? Sebelum dipakai: cek merek DJKI (kelas 9 & 42), domain (otora.id / .co.id / .app), akun media sosial, nama serupa.
+
 ---
 
 ## Langkah berikutnya
